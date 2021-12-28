@@ -1,6 +1,6 @@
 # GraphQL Errors
 
-When an error occurs when processing GraphQL queries, [graphql-js](https://github.com/graphql/graphql-js) sends the complete error message to the client with the response. In most cases, sending error messages to the client without supervision is not recommended. The `graphql-errors` module fixes this issue by masking error messages sent to the client. This module intercepts GraphQL error messages and replaces them with `"internal error"`.
+When an error occurs when processing GraphQL queries, [graphql-js](https://github.com/graphql/graphql-js) sends the complete error message to the client with the response. In most cases, sending error messages to the client without supervision is not recommended. The `graphql-errors` module fixes this issue by masking error messages sent to the client. This module intercepts GraphQL error messages extended from Error and replaces them with `"internal error"`.  Error messages extended from UserError are sent as written,
 
 ``` javascript
 var express = require('express');
@@ -16,6 +16,11 @@ var schema = new graphql.GraphQLSchema({
         type: graphql.GraphQLString,
         resolve() {
           throw new Error('secret error message');
+        },
+      test: {
+        type: graphql.GraphQLString,
+        resolve() {
+          throw new UserError('not secret error message');
         },
       },
     },
